@@ -59,6 +59,7 @@ flycheck_*.el
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
+.idea/
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -268,10 +269,6 @@ tags
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 .history
 
 ### Windows ###
@@ -296,3 +293,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/vim,git,linux,emacs,macos,python,windows,jetbrains,visualstudiocode
+
+# music and image
+*.mp3
+*.png
