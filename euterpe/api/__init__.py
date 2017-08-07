@@ -9,6 +9,7 @@ import requests
 
 from euterpe.utils import aes
 from euterpe.utils import rsa
+from euterpe import errors
 
 
 class BaseAPI(object):
@@ -55,10 +56,40 @@ class NeteaseMusicAPI(BaseAPI):
         sending_data = {'params': self.encrypt_body(data, key), 'encSecKey': self.encrypt_key(key)}
         return self.session.post(url, sending_data)
 
+    def get_song_detail(self, song_id: int):
+        url = '/weapi/v3/song/detail'
+        data = {'id': str(song_id), 'c': json.dumps([{'id': str(song_id)}])}
+        return self.post(url, data).json()
+
+    def get_playlist_detail(self, playlist_id: int):
+        url = '/weapi/v3/playlist/detail'
+        data = {'id': str(playlist_id)}
+        return self.post(url, data).json()
+
+    def get_song_audio(self, song_id):
+        url = '/weapi/song/enhance/player/url'
+        if isinstance(song_id, int):
+            song_ids = [song_id]
+        else:
+            song_ids = song_id
+        data = {'br': 128000, 'ids': song_ids}
+        return self.post(url, data).json()
+
+    def get_song_file(self, song_id):
+        info = self.get_song_audio(song_id)
+        try:
+            url = info['data'][0]['url']
+        except KeyError:
+            raise errors.SongNotFoundError()
+        if not url:
+            raise errors.SongCannotDownloadError()
+        content = self.session.get(url).content
+        return content
+
 
 if __name__ == '__main__':
-    payload = {'s': 'snow halation', 'type': '1', 'offset': '0', 'total': 'true', 'limit': '10'}
-    url = '/weapi/cloudsearch/get/web'
-    session = NeteaseMusicAPI()
-    res = session.post(url, payload)
-    print(json.dumps(res.json(), indent=2))
+    api = NeteaseMusicAPI()
+    res = api.get_song_file(27632615)
+    with open('temp.mp3', 'wb') as file:
+        file.write(res)
+    # print(json.dumps(res, indent=2))
