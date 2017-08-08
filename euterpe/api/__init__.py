@@ -63,7 +63,7 @@ class NeteaseMusicAPI(BaseAPI):
 
     def get_playlist_detail(self, playlist_id: int):
         url = '/weapi/v3/playlist/detail'
-        data = {'id': str(playlist_id)}
+        data = {'id': str(playlist_id), 'n': '100000'}
         return self.post(url, data).json()
 
     def get_song_audio(self, song_id):
@@ -89,7 +89,6 @@ class NeteaseMusicAPI(BaseAPI):
 
 if __name__ == '__main__':
     api = NeteaseMusicAPI()
-    res = api.get_song_file(27632615)
-    with open('temp.mp3', 'wb') as file:
-        file.write(res)
-    # print(json.dumps(res, indent=2))
+    # res = api.get_playlist_detail(436692330)
+    res = api.get_song_detail(471795)
+    print(json.dumps(res, indent=2))

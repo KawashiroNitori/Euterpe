@@ -1,6 +1,10 @@
-class SongNotFoundError(Exception):
+class NotFoundError(Exception):
     pass
 
 
-class SongCannotDownloadError(Exception):
+class SongNotFoundError(NotFoundError):
+    pass
+
+
+class SongCannotDownloadError(NotFoundError):
     pass
