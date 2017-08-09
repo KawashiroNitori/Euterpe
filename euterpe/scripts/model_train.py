@@ -9,13 +9,13 @@ from keras.optimizers import rmsprop
 
 IMAGE_SIZE = 256
 NB_EPOCH = 20
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 
 TRAIN_DATA_DIR = 'data/train'
 VALIDATE_DATA_DIR = 'data/validate'
 
-NB_TRAIN_SAMPLES = 200000
-NB_VALIDATE_SAMPLES = 50000
+NB_TRAIN_SAMPLES = 196452
+NB_VALIDATE_SAMPLES = 60000
 
 if backend.image_data_format() == 'channels_first':
     INPUT_SHAPE = 3, IMAGE_SIZE, IMAGE_SIZE
@@ -25,7 +25,8 @@ else:
 
 def main():
     early_stopping = EarlyStopping(monitor='val_loss', patience=3)
-    save_best_model = ModelCheckpoint(filepath='model_.{epoch:02d}_{val_loss:.2f}.hdf5', verbose=1, monitor='val_loss')
+    save_best_model = ModelCheckpoint(filepath='model_{epoch:02d}_{val_loss:.2f}_{val_acc:.3f}.hdf5',
+                                      verbose=1, monitor='val_loss')
 
     model = Sequential()
 
