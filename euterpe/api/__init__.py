@@ -59,7 +59,7 @@ class NeteaseMusicAPI(BaseAPI):
     def get_song_detail(self, song_id: int):
         url = '/weapi/v3/song/detail'
         data = {'id': str(song_id), 'c': json.dumps([{'id': str(song_id)}])}
-        return self.post(url, data).json()
+        return self.post(url, data).json()['songs'][0]
 
     def get_playlist_detail(self, playlist_id: int):
         url = '/weapi/v3/playlist/detail'

@@ -1,11 +1,13 @@
 import os
 import glob
+import traceback
 
 import numpy
 from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
 
 from euterpe.utils import spectrogram
+from euterpe.api import NeteaseMusicAPI
 
 FILENAME = 'file.mp3'
 
@@ -30,14 +32,26 @@ def main(input_file: str):
         prediction = model.predict(image)
         predictions.append(prediction)
 
-    print(predictions)
-    pred_sum = sum(a[0] for a in predictions)
-    biggest_sum = numpy.amax(pred_sum)
-    pct_confidence = round((biggest_sum / sum(pred_sum) * 100), 2)
-    pred_class_num = numpy.argmax(pred_sum)
+    for file in spect_files:
+        os.remove(file)
 
-    print('{0} confidence.'.format(pct_confidence))
+    predictions = [a[0][0] for a in predictions]
+    print(predictions)
+    print('Moe Confidence: {0:.3%}'.format(numpy.mean(predictions)))
+    # pred_sum = sum(a[0][0] for a in predictions)
+    # print('{0} confidence.'.format(pct_confidence))
 
 
 if __name__ == '__main__':
-    main('in_the_end.mp3')
+    api = NeteaseMusicAPI()
+    while True:
+        try:
+            song_id = int(input('Input song ID: '))
+            res = api.get_song_detail(song_id)
+            content = api.get_song_file(song_id)
+            print('Song: {0}'.format(res['name']))
+            with open('example.mp3', 'wb') as file:
+                file.write(content)
+            main('example.mp3')
+        except Exception as e:
+            traceback.print_exc(e)
