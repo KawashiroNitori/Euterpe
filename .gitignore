@@ -297,3 +297,6 @@ $RECYCLE.BIN/
 # music and image
 *.mp3
 *.png
+
+# training data
+data/*
